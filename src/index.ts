@@ -25,6 +25,16 @@ const orderSchema = v.object(
 );
 type Order = v.InferOutput<typeof orderSchema>;
 
+// 5.4.3 選択型によるモデリング 
+// data ProductCode = WidgetCode OR GizmoCode
+// type ProductCode = Widget of WidgetCode | Gizmo of GizmoCode
+// ブランド型と直和型を組み合わせて表現する
+const widgetCodeSchema = v.pipe(v.string(), v.brand('WidgetCode'));
+const gizmoCodeSchema = v.pipe(v.string(), v.brand('GizmoCode'));
+const productCodeSchema = v.union([widgetCodeSchema,gizmoCodeSchema]);
+type WidgetCode = v.InferOutput<typeof widgetCodeSchema>;
+type GizmoCode = v.InferOutput<typeof gizmoCodeSchema>;
+type ProductCode = v.InferOutput<typeof productCodeSchema>;
 
 function main() {
     const customerId = v.safeParse(customerIdSchema, 123);
