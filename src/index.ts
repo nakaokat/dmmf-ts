@@ -55,6 +55,11 @@ function main() {
     } else {
         console.error("Order validation failed:", order.issues);
     }
+    console.log("5.4.3 選択型によるモデリング");
+    const widgetCode = v.safeParse(widgetCodeSchema, "widget-123");
+    const gizmoCode = v.safeParse(gizmoCodeSchema, "gizmo-456");
+    const productCodeWidget = v.safeParse(productCodeSchema, widgetCode.output);
+    console.log("Product Code (Widget):", productCodeWidget.output);
 }
 
 console.log(title);
