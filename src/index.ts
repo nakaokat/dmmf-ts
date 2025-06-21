@@ -9,6 +9,18 @@ type CustomerId = v.InferOutput<typeof customerIdSchema>;
 const orderIdSchema = v.pipe(v.number(), v.brand('OrderId'));
 type OrderId = v.InferOutput<typeof orderIdSchema>;
 
+// 5.4 複雑なデータのモデリング
+// 5.4.1 レコード型によるモデリング
+// 以下のように直積型でモデリングする
+// data Order = CustomerInfo AND ShippingAddress ...
+const orderSchema = v.object(
+    {
+        customerInfo: v.string(),
+        shippingAddress: v.string(),
+        amountToBill: v.number(),
+    }
+);
+type Order = v.InferOutput<typeof orderSchema>;
 
 function main() {
     const customerId = v.safeParse(customerIdSchema, 123);
