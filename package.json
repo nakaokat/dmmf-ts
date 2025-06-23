@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "fp-ts": "^2.16.10",
     "valibot": "^1.1.0"
   },
   "devDependencies": {
