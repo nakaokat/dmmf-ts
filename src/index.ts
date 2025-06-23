@@ -76,6 +76,30 @@ type PlaceOrderEvents = {
     };
 }
 
+// 5.5.2 関数のシグネチャでエフェクトを文書化する
+// エフェクト：関数が主な出力以外に行うこと
+// type ValidateOrder = UnvalidatedOrder -> Result<ValidatedOrder,ValidationError list>
+
+type ValidationError = {
+    code: string;
+    message: string;
+};
+
+// 自前でResult型を定義する場合
+type Result<TOk, TErr> =
+  | { tag: 'ok'; value: TOk }
+  | { tag: 'error'; error: TErr };
+
+type ValidateOrder2 = (order: UnvalidatedOrder) => Result<ValidatedOrder, ValidationError[]>;
+
+// 自前で定義したResult型を使用したバリデーション関数の実装例
+const validateOrder2: ValidateOrder2 = (order: UnvalidatedOrder) => {
+    if (order.orderId <= 0) {
+        return { tag: 'error', error: [{ code: 'InvalidOrderId', message: 'Order ID must be positive.' }] };
+    }
+    return { tag: 'ok', value: { tag: 'ValidatedOrder', orderId: order.orderId } };
+};
+
 
 function main() {
     const customerId = v.safeParse(customerIdSchema, 123);
