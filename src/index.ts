@@ -36,6 +36,47 @@ type WidgetCode = v.InferOutput<typeof widgetCodeSchema>;
 type GizmoCode = v.InferOutput<typeof gizmoCodeSchema>;
 type ProductCode = v.InferOutput<typeof productCodeSchema>;
 
+// 5.5 関数によるワークフローのモデリング
+// type ValidateOrder = UnvalidatedOrder -> ValidatedOrder
+// 5.5.1 複雑な入力と出力の処理
+type UnvalidatedOrder = {
+    tag: 'UnvalidatedOrder';
+    orderId: OrderId;
+};
+type ValidatedOrder = {
+    tag: 'ValidatedOrder';
+    orderId: OrderId;
+}
+type ValidateOrder = (order: UnvalidatedOrder) => ValidatedOrder;
+const validateOrder: ValidateOrder = (order: UnvalidatedOrder) => {
+    return {
+        tag: 'ValidatedOrder',
+        orderId: order.orderId,
+    }
+};
+
+// type PlaceOrderEvents = {
+//   AcknowledgmentSent : AcknowledgmentSent
+//   OrderPlaced : OrderPlaced
+//   BillableOrderPlaced : BillableOrderPlaced
+// }
+type PlaceOrderEvents = {
+    AcknowledgmentSent: {
+        tag: 'AcknowledgmentSent';
+        orderId: OrderId;
+    };
+    OrderPlaced: {
+        tag: 'OrderPlaced';
+        orderId: OrderId;
+    };
+    BillableOrderPlaced: {
+        tag: 'BillableOrderPlaced';
+        orderId: OrderId;
+        amountToBill: number;
+    };
+}
+
+
 function main() {
     const customerId = v.safeParse(customerIdSchema, 123);
     const orderId = v.safeParse(orderIdSchema, 456);
@@ -60,6 +101,15 @@ function main() {
     const gizmoCode = v.safeParse(gizmoCodeSchema, "gizmo-456");
     const productCodeWidget = v.safeParse(productCodeSchema, widgetCode.output);
     console.log("Product Code (Widget):", productCodeWidget.output);
+
+    console.log("# 5.5 関数によるワークフローのモデリング");
+    const unvalidatedOrder: UnvalidatedOrder = {
+        tag: 'UnvalidatedOrder',
+        orderId: 789 as OrderId, // 型アサーションを使用してOrderId型に変換
+    };
+    const validatedOrder = validateOrder(unvalidatedOrder);
+    console.log("Validated Order:", validatedOrder);
+
 }
 
 console.log(title);
