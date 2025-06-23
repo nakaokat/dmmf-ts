@@ -1,4 +1,6 @@
 import * as v from 'valibot';
+import { Either } from 'fp-ts/Either';
+import * as E from 'fp-ts/Either'
 
 // 第5 章 型によるドメインモデリング
 const title = '第5 章 型によるドメインモデリング';
@@ -100,6 +102,17 @@ const validateOrder2: ValidateOrder2 = (order: UnvalidatedOrder) => {
     return { tag: 'ok', value: { tag: 'ValidatedOrder', orderId: order.orderId } };
 };
 
+// fp-tsのEitherを使用して「エフェクトを文書化」する場合
+// https://gcanti.github.io/fp-ts/modules/Either.ts.html
+type ValidateOrder3 = (order: UnvalidatedOrder) => Either<ValidationError[], ValidatedOrder>;
+
+const validateOrder3: ValidateOrder3 = (order: UnvalidatedOrder) => {
+    if (order.orderId <= 0) {
+        return E.left([{ code: 'InvalidOrderId', message: 'Order ID must be positive.' }]);
+    }
+    return E.right({ tag: 'ValidatedOrder', orderId: order.orderId });
+};
+
 
 function main() {
     const customerId = v.safeParse(customerIdSchema, 123);
@@ -133,6 +146,19 @@ function main() {
     };
     const validatedOrder = validateOrder(unvalidatedOrder);
     console.log("Validated Order:", validatedOrder);
+
+    console.log("# 5.5.2 関数のシグネチャでエフェクトを文書化する");
+    // eitherを使用したバリデーション
+    const unvalidatedOrder2: UnvalidatedOrder = {
+        tag: 'UnvalidatedOrder',
+        orderId: -1 as OrderId, // 型アサーションを使用してOrderId型に変換
+    };
+    const result = validateOrder3(unvalidatedOrder2);
+    if (E.isLeft(result)) {
+        console.error("Validation errors:", result.left);
+    } else {
+        console.log("Validated Order (Either):", result.right);
+    }
 
 }
 
