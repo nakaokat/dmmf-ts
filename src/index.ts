@@ -6,16 +6,16 @@ import * as E from 'fp-ts/Either'
 const title = '第5 章 型によるドメインモデリング';
 
 // 5.3 単純な値のモデリング
-const customerIdSchema = v.pipe(v.number(), v.brand('CustomerId'));
-type CustomerId = v.InferOutput<typeof customerIdSchema>;
-const orderIdSchema = v.pipe(v.number(), v.brand('OrderId'));
-type OrderId = v.InferOutput<typeof orderIdSchema>;
+export const customerIdSchema = v.pipe(v.number(), v.brand('CustomerId'));
+export type CustomerId = v.InferOutput<typeof customerIdSchema>;
+export const orderIdSchema = v.pipe(v.number(), v.brand('OrderId'));
+export type OrderId = v.InferOutput<typeof orderIdSchema>;
 
 // 5.4 複雑なデータのモデリング
 // 5.4.1 レコード型によるモデリング
 // 以下のように直積型でモデリングする
 // data Order = CustomerInfo AND ShippingAddress ...
-const orderSchema = v.object(
+export const orderSchema = v.object(
     {   
         // 5.4.2 未知の型のモデリング
         // 未定義の型を表現したい場合、knownがプレースホルダー的な使い方ができるという点で近いだろうか
@@ -25,32 +25,32 @@ const orderSchema = v.object(
         amountToBill: v.unknown(),
     }
 );
-type Order = v.InferOutput<typeof orderSchema>;
+export type Order = v.InferOutput<typeof orderSchema>;
 
 // 5.4.3 選択型によるモデリング 
 // data ProductCode = WidgetCode OR GizmoCode
 // type ProductCode = Widget of WidgetCode | Gizmo of GizmoCode
 // ブランド型と直和型を組み合わせて表現する
-const widgetCodeSchema = v.pipe(v.string(), v.brand('WidgetCode'));
-const gizmoCodeSchema = v.pipe(v.string(), v.brand('GizmoCode'));
-const productCodeSchema = v.union([widgetCodeSchema,gizmoCodeSchema]);
-type WidgetCode = v.InferOutput<typeof widgetCodeSchema>;
-type GizmoCode = v.InferOutput<typeof gizmoCodeSchema>;
-type ProductCode = v.InferOutput<typeof productCodeSchema>;
+export const widgetCodeSchema = v.pipe(v.string(), v.brand('WidgetCode'));
+export const gizmoCodeSchema = v.pipe(v.string(), v.brand('GizmoCode'));
+export const productCodeSchema = v.union([widgetCodeSchema,gizmoCodeSchema]);
+export type WidgetCode = v.InferOutput<typeof widgetCodeSchema>;
+export type GizmoCode = v.InferOutput<typeof gizmoCodeSchema>;
+export type ProductCode = v.InferOutput<typeof productCodeSchema>;
 
 // 5.5 関数によるワークフローのモデリング
 // type ValidateOrder = UnvalidatedOrder -> ValidatedOrder
 // 5.5.1 複雑な入力と出力の処理
-type UnvalidatedOrder = {
+export type UnvalidatedOrder = {
     tag: 'UnvalidatedOrder';
     orderId: OrderId;
 };
-type ValidatedOrder = {
+export type ValidatedOrder = {
     tag: 'ValidatedOrder';
     orderId: OrderId;
 }
 type ValidateOrder = (order: UnvalidatedOrder) => ValidatedOrder;
-const validateOrder: ValidateOrder = (order: UnvalidatedOrder) => {
+export const validateOrder: ValidateOrder = (order: UnvalidatedOrder) => {
     return {
         tag: 'ValidatedOrder',
         orderId: order.orderId,
@@ -82,7 +82,7 @@ type PlaceOrderEvents = {
 // エフェクト：関数が主な出力以外に行うこと
 // type ValidateOrder = UnvalidatedOrder -> Result<ValidatedOrder,ValidationError list>
 
-type ValidationError = {
+export type ValidationError = {
     code: string;
     message: string;
 };
@@ -95,7 +95,7 @@ type Result<TOk, TErr> =
 type ValidateOrder2 = (order: UnvalidatedOrder) => Result<ValidatedOrder, ValidationError[]>;
 
 // 自前で定義したResult型を使用したバリデーション関数の実装例
-const validateOrder2: ValidateOrder2 = (order: UnvalidatedOrder) => {
+export const validateOrder2: ValidateOrder2 = (order: UnvalidatedOrder) => {
     if (order.orderId <= 0) {
         return { tag: 'error', error: [{ code: 'InvalidOrderId', message: 'Order ID must be positive.' }] };
     }
@@ -106,12 +106,13 @@ const validateOrder2: ValidateOrder2 = (order: UnvalidatedOrder) => {
 // https://gcanti.github.io/fp-ts/modules/Either.ts.html
 type ValidateOrder3 = (order: UnvalidatedOrder) => Either<ValidationError[], ValidatedOrder>;
 
-const validateOrder3: ValidateOrder3 = (order: UnvalidatedOrder) => {
+export const validateOrder3: ValidateOrder3 = (order: UnvalidatedOrder) => {
     if (order.orderId <= 0) {
         return E.left([{ code: 'InvalidOrderId', message: 'Order ID must be positive.' }]);
     }
     return E.right({ tag: 'ValidatedOrder', orderId: order.orderId });
 };
+
 
 
 function main() {
