@@ -1,4 +1,4 @@
-# valibot-dmmf
+# dmmf-ts
 
 Domain Modeling Made FunctionalのようなコードをTypeScriptとvalibotで書くプロジェクト
 
@@ -26,4 +26,3 @@ pnpm start
 - TypeScript
 - valibot - バリデーションライブラリ
 - tsx - TypeScript実行環境
-
