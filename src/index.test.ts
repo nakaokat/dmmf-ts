@@ -1,14 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import * as v from 'valibot';
-import * as E from 'fp-ts/Either';
 import {
   customerIdSchema,
   orderIdSchema,
 } from './index';
 
-describe('Domain Modeling with Types', () => {
-  describe('Simple Value Modeling', () => {
-    it('should validate CustomerId', () => {
+describe('5 型によるドメインモデリング', () => {
+  describe('5.3 単純な値のモデリング', () => {
+    it('CustomerId', () => {
       const result = v.safeParse(customerIdSchema, 123);
       expect(result.success).toBe(true);
       if (result.success) {
@@ -16,12 +15,22 @@ describe('Domain Modeling with Types', () => {
       }
     });
 
-    it('should validate OrderId', () => {
+    it('異常系: CustomerId with invalid value', () => {
+      const result = v.safeParse(customerIdSchema, '123');
+      expect(result.success).toBe(false);
+    });
+
+    it('OrderId', () => {
       const result = v.safeParse(orderIdSchema, 456);
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.output).toBe(456);
       }
+    });
+
+    it('異常系: OrderId with invalid value', () => {
+      const result = v.safeParse(orderIdSchema, '123');
+      expect(result.success).toBe(false);
     });
   });
 });
