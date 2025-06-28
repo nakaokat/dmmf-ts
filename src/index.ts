@@ -1,6 +1,7 @@
 import * as v from 'valibot';
 import { Either } from 'fp-ts/Either';
 import * as E from 'fp-ts/Either'
+import { orderIdSchema, OrderId } from './model/order';
 
 // 第5 章 型によるドメインモデリング
 const title = '第5 章 型によるドメインモデリング';
@@ -8,8 +9,6 @@ const title = '第5 章 型によるドメインモデリング';
 // 5.3 単純な値のモデリング
 export const customerIdSchema = v.pipe(v.number(), v.brand('CustomerId'));
 export type CustomerId = v.InferOutput<typeof customerIdSchema>;
-export const orderIdSchema = v.pipe(v.number(), v.brand('OrderId'));
-export type OrderId = v.InferOutput<typeof orderIdSchema>;
 
 // 5.4 複雑なデータのモデリング
 // 5.4.1 レコード型によるモデリング

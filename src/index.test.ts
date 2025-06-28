@@ -2,8 +2,11 @@ import { describe, it, expect } from 'vitest';
 import * as v from 'valibot';
 import {
   customerIdSchema,
-  orderIdSchema,
 } from './index';
+
+import {
+  orderIdSchema,
+} from './model/order';
 
 describe('5 型によるドメインモデリング', () => {
   describe('5.3 単純な値のモデリング', () => {
