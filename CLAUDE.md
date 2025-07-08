@@ -36,6 +36,15 @@ pnpm build
 
 # Run built project
 pnpm start
+
+# Lint code
+pnpm lint
+
+# Lint and fix code
+pnpm lint:fix
+
+# Format code
+pnpm format
 ```
 
 ## Code Architecture
