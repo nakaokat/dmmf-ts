@@ -1,0 +1,42 @@
+{
+	// Biome スキーマ定義
+	"$schema": "https://biomejs.dev/schemas/2.1.1/schema.json",
+	// バージョン管理システム設定
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	// ファイル処理設定
+	"files": {
+		"ignoreUnknown": false
+	},
+	// フォーマッター設定
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "space", // スペースでインデント
+		"indentWidth": 4 // 4スペースのインデント
+	},
+	// リンター設定
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true // 推奨ルールを有効化
+		}
+	},
+	// JavaScript/TypeScript固有設定
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double" // ダブルクォートを使用
+		}
+	},
+	// アシスト機能設定
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on" // インポート自動整理を有効化
+			}
+		}
+	}
+}
